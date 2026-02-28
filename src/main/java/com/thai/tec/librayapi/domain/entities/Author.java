@@ -3,14 +3,19 @@ package com.thai.tec.librayapi.domain.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name="author", schema = "public")
 @Data
+@EntityListeners(AuditingEntityListener.class)
 @ToString(exclude = "books")
 public class Author {
     @Id
@@ -29,5 +34,13 @@ public class Author {
 
     @OneToMany(mappedBy = "author",fetch = FetchType.EAGER)
     private List<Book> books;
+
+    @CreatedDate
+    @Column(name = "createAt")
+    private LocalDateTime createAt;
+
+    @LastModifiedDate
+    @Column(name = "updateAt")
+    private LocalDateTime updateAt;
 
 }

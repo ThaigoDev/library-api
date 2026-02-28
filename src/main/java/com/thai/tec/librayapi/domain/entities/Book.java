@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -40,6 +41,9 @@ public class Book {
     )
     @JoinColumn(name = "id_author")
     private Author author;
+
+    private LocalDateTime createAt;
+    private LocalDateTime updateAt;
 
 
 }
