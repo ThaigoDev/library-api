@@ -2,8 +2,16 @@ package com.thai.tec.librayapi.service;
 
 import com.thai.tec.librayapi.domain.dtos.RequestAuthorDTO;
 import com.thai.tec.librayapi.domain.dtos.ResponseAuthorDTO;
+import com.thai.tec.librayapi.domain.dtos.ResponseErrorDTO;
 import com.thai.tec.librayapi.domain.entities.Author;
+import com.thai.tec.librayapi.exceptions.AuthorWithBookException;
+import com.thai.tec.librayapi.exceptions.DuplicatedRegisterException;
 import com.thai.tec.librayapi.repositories.AuthorRepository;
+import com.thai.tec.librayapi.repositories.BookRepository;
+import com.thai.tec.librayapi.validator.AuthorValidator;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,19 +24,19 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class AuthorService {
     private final AuthorRepository authorRepository;
-
-    public AuthorService(AuthorRepository authorRepository) {
-        this.authorRepository = authorRepository;
-    }
+    private final AuthorValidator authorValidator;
+    private final BookRepository bookRepository;
 
     public ResponseAuthorDTO saveAuthor(RequestAuthorDTO requestAuthorDTO) {
+            authorValidator.validator(requestAuthorDTO);
 
-        Author author = requestAuthorDTO.mapToEntity();
-        authorRepository.save(author);
+            Author author = requestAuthorDTO.mapToEntity();
+            authorRepository.save(author);
 
-        return new ResponseAuthorDTO(author.getId(), author.getNameAuthor(), author.getDateOfBirth(), author.getNacionality());
+            return new ResponseAuthorDTO(author.getId(), author.getNameAuthor(), author.getDateOfBirth(), author.getNacionality());
     }
 
     public List<ResponseAuthorDTO> getAllAuthors() {
@@ -51,6 +59,9 @@ public class AuthorService {
     public void deleteAuthorById(String id) {
         UUID uuid = UUID.fromString(id);
         Author authorExisted = authorRepository.findById(uuid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found Author"));
+        if(bookRepository.existsByAuthor(authorExisted)) {
+            throw new AuthorWithBookException("This Author have books registred");
+        }
         authorRepository.delete(authorExisted);
 
     }
@@ -69,6 +80,15 @@ public class AuthorService {
         }
         return listAuthors.stream().map(author -> new ResponseAuthorDTO(author.getId(), author.getNameAuthor(), author.getDateOfBirth(), author.getNacionality())).collect(Collectors.toList());
 
+
+    }
+    public List<ResponseAuthorDTO> searchByExample(String nameAuthor, String nacionality) {
+        Author author = new Author();
+        author.setNameAuthor(nameAuthor); 
+        author.setNacionality(nacionality);
+        ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        Example<Author> authorExample = Example.of(author,matcher);
+        return authorRepository.findAll(authorExample).stream().map(ath-> new ResponseAuthorDTO(ath.getId(),ath.getNameAuthor(),ath.getDateOfBirth(),ath.getNacionality())).collect(Collectors.toList());
 
     }
 

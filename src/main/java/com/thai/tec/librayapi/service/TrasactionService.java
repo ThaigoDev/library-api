@@ -5,6 +5,7 @@ import com.thai.tec.librayapi.domain.entities.Book;
 import com.thai.tec.librayapi.domain.enums.GenderBook;
 import com.thai.tec.librayapi.repositories.AuthorRepository;
 import com.thai.tec.librayapi.repositories.BookRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,11 +15,10 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class TrasactionService {
-    @Autowired
-    private AuthorRepository authorRepository;
-    @Autowired
-    private BookRepository bookRepository;
+    private final  AuthorRepository authorRepository;
+    private final BookRepository bookRepository;
 
 
     @Transactional

@@ -14,6 +14,8 @@ import java.util.UUID;
 public interface BookRepository  extends JpaRepository<Book, UUID> {
  List<Book> findByAuthor(Author author);
  List<Book> findByTitleContaining(String title);
+
+    boolean existsByAuthor(Author authorExisted);
 // @Query("select bk from Book as bk order by bk.title, bk.price  ")
 // List<Book> listBooks();
  //aqui fazemos um inner join
