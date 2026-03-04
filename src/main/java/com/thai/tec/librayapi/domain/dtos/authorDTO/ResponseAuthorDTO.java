@@ -1,6 +1,4 @@
-package com.thai.tec.librayapi.domain.dtos;
-
-import com.thai.tec.librayapi.domain.entities.Author;
+package com.thai.tec.librayapi.domain.dtos.authorDTO;
 
 import java.time.LocalDate;
 import java.util.UUID;

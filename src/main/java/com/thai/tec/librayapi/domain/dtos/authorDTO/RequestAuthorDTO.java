@@ -1,4 +1,4 @@
-package com.thai.tec.librayapi.domain.dtos;
+package com.thai.tec.librayapi.domain.dtos.authorDTO;
 
 import com.thai.tec.librayapi.domain.entities.Author;
 import jakarta.validation.constraints.NotBlank;

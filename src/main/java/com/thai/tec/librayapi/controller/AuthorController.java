@@ -1,35 +1,29 @@
 package com.thai.tec.librayapi.controller;
 
-import com.thai.tec.librayapi.domain.dtos.RequestAuthorDTO;
-import com.thai.tec.librayapi.domain.dtos.ResponseAuthorDTO;
-import com.thai.tec.librayapi.domain.dtos.ResponseErrorDTO;
-import com.thai.tec.librayapi.domain.entities.Author;
-import com.thai.tec.librayapi.exceptions.DuplicatedRegisterException;
+import com.thai.tec.librayapi.controller.util.LocationURIGenerator;
+import com.thai.tec.librayapi.domain.dtos.authorDTO.RequestAuthorDTO;
+import com.thai.tec.librayapi.domain.dtos.authorDTO.ResponseAuthorDTO;
+import com.thai.tec.librayapi.mappers.AuthorMapper;
 import com.thai.tec.librayapi.service.AuthorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/authors")
 @RequiredArgsConstructor
-public class AuthorController {
+public class AuthorController implements LocationURIGenerator {
     private final AuthorService authorService;
-
     @PostMapping
     public ResponseEntity<ResponseAuthorDTO> save(@RequestBody @Valid RequestAuthorDTO requestAuthorDTO) {
 
             var author = authorService.saveAuthor(requestAuthorDTO);
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("{id}").buildAndExpand(author.id()).toUri();
+            URI location = generateHeaderLoation(author.id());
 
             return ResponseEntity.created(location).build();
 

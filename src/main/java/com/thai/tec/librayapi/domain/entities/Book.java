@@ -4,6 +4,9 @@ import com.thai.tec.librayapi.domain.enums.GenderBook;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,6 +17,7 @@ import java.util.UUID;
 @Table(name = "book")
 @Data
 @ToString(exclude = "author")
+@EntityListeners(AuditingEntityListener.class)
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -42,7 +46,10 @@ public class Book {
     @JoinColumn(name = "id_author")
     private Author author;
 
+    @CreatedDate
     private LocalDateTime createAt;
+
+    @LastModifiedDate
     private LocalDateTime updateAt;
 
 

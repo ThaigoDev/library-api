@@ -1,7 +1,6 @@
 package com.thai.tec.librayapi.validator;
 
-import com.thai.tec.librayapi.domain.dtos.RequestAuthorDTO;
-import com.thai.tec.librayapi.domain.dtos.ResponseErrorDTO;
+import com.thai.tec.librayapi.domain.dtos.authorDTO.RequestAuthorDTO;
 import com.thai.tec.librayapi.domain.entities.Author;
 import com.thai.tec.librayapi.exceptions.DuplicatedRegisterException;
 import com.thai.tec.librayapi.repositories.AuthorRepository;

@@ -1,11 +1,10 @@
 package com.thai.tec.librayapi.service;
 
-import com.thai.tec.librayapi.domain.dtos.RequestAuthorDTO;
-import com.thai.tec.librayapi.domain.dtos.ResponseAuthorDTO;
-import com.thai.tec.librayapi.domain.dtos.ResponseErrorDTO;
+import com.thai.tec.librayapi.domain.dtos.authorDTO.RequestAuthorDTO;
+import com.thai.tec.librayapi.domain.dtos.authorDTO.ResponseAuthorDTO;
 import com.thai.tec.librayapi.domain.entities.Author;
 import com.thai.tec.librayapi.exceptions.AuthorWithBookException;
-import com.thai.tec.librayapi.exceptions.DuplicatedRegisterException;
+import com.thai.tec.librayapi.mappers.AuthorMapper;
 import com.thai.tec.librayapi.repositories.AuthorRepository;
 import com.thai.tec.librayapi.repositories.BookRepository;
 import com.thai.tec.librayapi.validator.AuthorValidator;
@@ -13,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -29,14 +27,16 @@ public class AuthorService {
     private final AuthorRepository authorRepository;
     private final AuthorValidator authorValidator;
     private final BookRepository bookRepository;
+    private final AuthorMapper mapper;
+
 
     public ResponseAuthorDTO saveAuthor(RequestAuthorDTO requestAuthorDTO) {
             authorValidator.validator(requestAuthorDTO);
 
-            Author author = requestAuthorDTO.mapToEntity();
+            Author author = mapper.toEntity(requestAuthorDTO);
             authorRepository.save(author);
 
-            return new ResponseAuthorDTO(author.getId(), author.getNameAuthor(), author.getDateOfBirth(), author.getNacionality());
+            return mapper.toDTO(author);
     }
 
     public List<ResponseAuthorDTO> getAllAuthors() {

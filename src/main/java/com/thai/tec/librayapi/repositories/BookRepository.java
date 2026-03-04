@@ -3,6 +3,7 @@ package com.thai.tec.librayapi.repositories;
 import com.thai.tec.librayapi.domain.entities.Author;
 import com.thai.tec.librayapi.domain.entities.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 import java.util.UUID;
@@ -11,11 +12,12 @@ import java.util.UUID;
  */
 
 
-public interface BookRepository  extends JpaRepository<Book, UUID> {
+public interface BookRepository  extends JpaRepository<Book, UUID> , JpaSpecificationExecutor<Book> {
  List<Book> findByAuthor(Author author);
  List<Book> findByTitleContaining(String title);
 
     boolean existsByAuthor(Author authorExisted);
+    boolean existsByAuthorAndTitle(Author author, String title);
 // @Query("select bk from Book as bk order by bk.title, bk.price  ")
 // List<Book> listBooks();
  //aqui fazemos um inner join

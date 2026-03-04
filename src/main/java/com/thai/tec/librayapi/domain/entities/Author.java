@@ -1,5 +1,6 @@
 package com.thai.tec.librayapi.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -26,13 +27,14 @@ public class Author {
     @Column(name = "nameAuthor",length = 100, nullable = false)
     private String nameAuthor;
 
-    @Column(name = "dateReborn", nullable = false)
+    @Column(name = "dateOfBirth", nullable = false)
     private LocalDate dateOfBirth;
 
     @Column(name = "nacionality", length = 50, nullable = false)
     private String nacionality;
 
-    @OneToMany(mappedBy = "author",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "author")
+    @JsonIgnore
     private List<Book> books;
 
     @CreatedDate
