@@ -50,10 +50,12 @@ public class BookController implements LocationURIGenerator {
             @RequestParam(value = "gender", required = false)
             GenderBook gender,
             @RequestParam(value = "year", required = false)
-            Integer year
+            Integer year,
+            @RequestParam(value = "nameAuthor", required = false)
+            String nameAuthor
     ) {
 
-        List<ResponseBookDTO> listBook = bookService.getAllBooksInSearch(isbn, title, gender, year);
+        List<ResponseBookDTO> listBook = bookService.getAllBooksInSearch(isbn, title, gender, year,nameAuthor);
         return ResponseEntity.ok().body(listBook);
     }
 

@@ -2,6 +2,8 @@ package com.thai.tec.librayapi.service.util.specs;
 
 import com.thai.tec.librayapi.domain.entities.Book;
 import com.thai.tec.librayapi.domain.enums.GenderBook;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -28,5 +30,14 @@ public class BookSpecs {
                                 String.class, root.get("datepublic"),
                                 cb.literal("YYYY")),
                         publishYear.toString());
+    }
+
+    public static Specification<Book> nameAuthorLike(String nameAuthor) {
+        return ((root, query, criteriaBuilder) -> {
+            Join<Object, Object> author = root.join("author", JoinType.INNER);
+            return criteriaBuilder.like(criteriaBuilder.upper(author.get("nameAuthor")), "%"+ nameAuthor.toUpperCase()+"%");
+
+//            return  criteriaBuilder.like(criteriaBuilder.upper(root.get("author").get("nameAuthor")),  "%" +nameAuthor.toUpperCase()+"%");
+        });
     }
 }

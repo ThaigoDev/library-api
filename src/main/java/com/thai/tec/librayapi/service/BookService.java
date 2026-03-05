@@ -44,7 +44,7 @@ public class BookService {
         return mapper.toDTO(bookRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, " Book Not found")));
     }
 
-    public List<ResponseBookDTO> getAllBooksInSearch(String isbn, String title, GenderBook gener, Integer year) {
+    public List<ResponseBookDTO> getAllBooksInSearch(String isbn, String title, GenderBook gener, Integer year, String nameAuthor) {
 
         Specification<Book> specs = Specification.where(((root, query, criteriaBuilder) -> criteriaBuilder.conjunction()));
         if (isbn != null) {
@@ -60,6 +60,9 @@ public class BookService {
             specs = specs.and(BookSpecs.publishYearEqual(year));
         }
 
+        if(nameAuthor != null) {
+            specs = specs.and(BookSpecs.nameAuthorLike(nameAuthor));
+        }
 
         return bookRepository.findAll(specs)
                 .stream()
