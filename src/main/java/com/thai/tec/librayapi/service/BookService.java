@@ -10,6 +10,7 @@ import com.thai.tec.librayapi.mappers.BookMapper;
 import com.thai.tec.librayapi.repositories.AuthorRepository;
 import com.thai.tec.librayapi.repositories.BookRepository;
 import com.thai.tec.librayapi.service.util.specs.BookSpecs;
+import com.thai.tec.librayapi.validator.BookValidator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
@@ -28,15 +29,19 @@ public class BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final BookMapper mapper;
+    private final BookValidator bookValidator;
 
     public ResponseBookDTO saveBook(@Valid RequestBookDTO requestBookDTO) {
         Author authorFinded = authorRepository.findById(requestBookDTO.author()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Author not found"));
+
         boolean bookExisted = bookRepository.existsByAuthorAndTitle(authorFinded, requestBookDTO.title());
         if (bookExisted) {
             throw new DuplicatedRegisterException("this Books is duplicated");
         }
 
         Book book = mapper.toEntity(requestBookDTO);
+        bookValidator.validar(book);
+        
         return mapper.toDTO(bookRepository.save(book));
     }
 
@@ -60,7 +65,7 @@ public class BookService {
             specs = specs.and(BookSpecs.publishYearEqual(year));
         }
 
-        if(nameAuthor != null) {
+        if (nameAuthor != null) {
             specs = specs.and(BookSpecs.nameAuthorLike(nameAuthor));
         }
 
@@ -77,5 +82,21 @@ public class BookService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found");
         }
         bookRepository.deleteById(id);
+    }
+
+    public void updateById(UUID id, RequestBookDTO dto) {
+        var bookEntityExisting = bookRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found"));
+        var entity = mapper.toEntity(dto);
+        bookValidator.validar(entity);
+
+        bookEntityExisting.setAuthor(entity.getAuthor());
+        bookEntityExisting.setPrice(entity.getPrice());
+        bookEntityExisting.setIsbn(entity.getIsbn());
+        bookEntityExisting.setTitle(entity.getTitle());
+        bookEntityExisting.setGener(entity.getGener());
+        bookEntityExisting.setDatepublic(entity.getDatepublic());
+
+        bookRepository.save(bookEntityExisting);
+
     }
 }

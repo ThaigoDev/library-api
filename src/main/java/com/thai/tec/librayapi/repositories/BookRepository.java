@@ -5,7 +5,9 @@ import com.thai.tec.librayapi.domain.entities.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 /**
  * @See BookRepositoryTest
@@ -18,6 +20,10 @@ public interface BookRepository  extends JpaRepository<Book, UUID> , JpaSpecific
 
     boolean existsByAuthor(Author authorExisted);
     boolean existsByAuthorAndTitle(Author author, String title);
+
+    boolean existsByIsbn(String isbn);
+
+    Optional<Book> findByIsbn(String isbn);
 // @Query("select bk from Book as bk order by bk.title, bk.price  ")
 // List<Book> listBooks();
  //aqui fazemos um inner join

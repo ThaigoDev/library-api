@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseErrorDTO handleArgumentNotValidException(MethodArgumentNotValidException e) {
         List<FieldError> fieldErrors = e.getFieldErrors();
@@ -28,5 +29,14 @@ public class GlobalExceptionHandler {
     public ResponseErrorDTO handleDuplicatedRegisterException( DuplicatedRegisterException e) {
          List<ErrorDTO> list = new ArrayList<>();
          return new ResponseErrorDTO(HttpStatus.CONTINUE.value(), e.getMessage(),list);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseErrorDTO handleRuntimeException  ( RuntimeException e ) {
+        return new ResponseErrorDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Erro in the server, please contact to support",List.of());
+    }
+    @ExceptionHandler(FielException.class)
+    public ResponseErrorDTO  handleFieldException (FielException e ) {
+        return new ResponseErrorDTO(HttpStatus.BAD_REQUEST.value(), "Validation Error", List.of( new ErrorDTO(e.getField(), e.getMessage())));
     }
 }

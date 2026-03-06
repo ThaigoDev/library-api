@@ -65,4 +65,11 @@ public class BookController implements LocationURIGenerator {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<Void> updateById(@PathVariable("id") UUID id, @RequestBody RequestBookDTO dto){
+         bookService.updateById(id, dto);
+
+         return ResponseEntity.noContent().build();
+    }
+
 }
