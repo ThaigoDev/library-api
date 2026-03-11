@@ -18,6 +18,10 @@ public class User {
 
     @Column
     private String username;
+
+    @Column
+    private String email;
+
     @Column
     private String password;
 

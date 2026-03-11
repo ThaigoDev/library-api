@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class SecurityService {
-    private final UserService userService;
     public User  gerUser() {
 
         Authentication authentication  = SecurityContextHolder.getContext().getAuthentication();

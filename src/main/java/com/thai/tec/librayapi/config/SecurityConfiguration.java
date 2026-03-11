@@ -1,6 +1,7 @@
 package com.thai.tec.librayapi.config;
 
 import com.thai.tec.librayapi.security.CustomUserDetailService;
+import com.thai.tec.librayapi.security.LoginSocialSucessHandler;
 import com.thai.tec.librayapi.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,12 +25,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfiguration {
     @Bean
-    public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity)  throws Exception {
+    public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity, LoginSocialSucessHandler loginSocialSucessHandler)  throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
-                .oauth2Login(Customizer.withDefaults())
+                .oauth2Login(oauth2 -> oauth2.successHandler(loginSocialSucessHandler))
                 .authorizeHttpRequests( authorize -> {
                     authorize.requestMatchers("/users/**").permitAll();
                     authorize.anyRequest().authenticated();
