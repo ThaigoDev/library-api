@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,4 +40,11 @@ public class GlobalExceptionHandler {
     public ResponseErrorDTO  handleFieldException (FielException e ) {
         return new ResponseErrorDTO(HttpStatus.BAD_REQUEST.value(), "Validation Error", List.of( new ErrorDTO(e.getField(), e.getMessage())));
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseErrorDTO handleAcessDenied(AccessDeniedException e) {
+        return new ResponseErrorDTO(HttpStatus.FORBIDDEN.value(), e.getMessage(),List.of());
+    }
+
 }

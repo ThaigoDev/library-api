@@ -1,6 +1,7 @@
 package com.thai.tec.librayapi.domain.dtos.bookDTO;
 
 import com.thai.tec.librayapi.domain.entities.Author;
+import com.thai.tec.librayapi.domain.entities.User;
 import com.thai.tec.librayapi.domain.enums.GenderBook;
 
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ public record ResponseBookDTO(
         GenderBook gender,
         BigDecimal price,
         Author author,
+        User user,
         LocalDateTime createAt,
         LocalDateTime updateAt
 ) {

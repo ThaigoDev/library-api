@@ -3,11 +3,15 @@ package com.thai.tec.librayapi.controller;
 import com.thai.tec.librayapi.controller.util.LocationURIGenerator;
 import com.thai.tec.librayapi.domain.dtos.authorDTO.RequestAuthorDTO;
 import com.thai.tec.librayapi.domain.dtos.authorDTO.ResponseAuthorDTO;
+import com.thai.tec.librayapi.domain.entities.User;
 import com.thai.tec.librayapi.mappers.AuthorMapper;
 import com.thai.tec.librayapi.service.AuthorService;
+import com.thai.tec.librayapi.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 

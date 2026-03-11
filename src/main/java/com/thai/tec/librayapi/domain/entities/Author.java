@@ -37,6 +37,10 @@ public class Author {
     @JsonIgnore
     private List<Book> books;
 
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
+
     @CreatedDate
     @Column(name = "createAt")
     private LocalDateTime createAt;

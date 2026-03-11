@@ -24,6 +24,6 @@ public record RequestAuthorDTO(
       author.setNameAuthor(this.nameAuthor);
       author.setNacionality(this.nacionality);
       author.setDateOfBirth(this.dateOfBirth);
-      return  author;
+      return author;
   }
 }

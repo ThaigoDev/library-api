@@ -3,19 +3,16 @@ package com.thai.tec.librayapi.controller;
 import com.thai.tec.librayapi.controller.util.LocationURIGenerator;
 import com.thai.tec.librayapi.domain.dtos.bookDTO.RequestBookDTO;
 import com.thai.tec.librayapi.domain.dtos.bookDTO.ResponseBookDTO;
-import com.thai.tec.librayapi.domain.entities.Book;
 import com.thai.tec.librayapi.domain.enums.GenderBook;
 import com.thai.tec.librayapi.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.swing.text.html.parser.Entity;
 import java.net.URI;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,6 +21,7 @@ import java.util.UUID;
 public class BookController implements LocationURIGenerator {
     private final BookService bookService;
 
+    @PreAuthorize("hasAnyRole('OPERADOR','GERENTE')")
     @PostMapping
     public ResponseEntity<ResponseBookDTO> saveBook(@RequestBody @Valid RequestBookDTO requestBookDTO) {
 
@@ -41,8 +39,10 @@ public class BookController implements LocationURIGenerator {
 
     }
 
+
+    @PreAuthorize("hasAnyRole('OPERADOR','GERENTE')")
     @GetMapping
-    public ResponseEntity<List<ResponseBookDTO>> searchBook(
+    public ResponseEntity<Page<ResponseBookDTO>> searchBook(
             @RequestParam(value = "isbn", required = false)
             String isbn,
             @RequestParam(value = "title", required = false)
@@ -52,20 +52,28 @@ public class BookController implements LocationURIGenerator {
             @RequestParam(value = "year", required = false)
             Integer year,
             @RequestParam(value = "nameAuthor", required = false)
-            String nameAuthor
+            String nameAuthor,
+            @RequestParam (value = "page", defaultValue = "0")
+            Integer page,
+            @RequestParam(value = "pageSize", defaultValue = "10")
+            Integer pageSize
     ) {
 
-        List<ResponseBookDTO> listBook = bookService.getAllBooksInSearch(isbn, title, gender, year,nameAuthor);
+        Page<ResponseBookDTO> listBook = bookService.getAllBooksInSearch(isbn, title, gender, year,nameAuthor,page,pageSize);
         return ResponseEntity.ok().body(listBook);
     }
 
+
+
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAnyRole('OPERADOR','GERENTE')")
     public ResponseEntity<Void> deleteById(@PathVariable("id") UUID id) {
         bookService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasAnyRole('OPERADOR','GERENTE')")
     public ResponseEntity<Void> updateById(@PathVariable("id") UUID id, @RequestBody RequestBookDTO dto){
          bookService.updateById(id, dto);
 

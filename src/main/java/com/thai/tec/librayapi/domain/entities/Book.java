@@ -46,6 +46,10 @@ public class Book {
     @JoinColumn(name = "id_author")
     private Author author;
 
+    @ManyToOne
+    @JoinColumn( name= "userId")
+    private User user;
+
     @CreatedDate
     private LocalDateTime createAt;
 
