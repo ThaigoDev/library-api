@@ -17,6 +17,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -30,6 +32,7 @@ public class SecurityConfiguration {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
+                .oauth2ResourceServer(oauthRS-> oauthRS.jwt(Customizer.withDefaults()))
                 .formLogin(config -> config.loginPage("/login").permitAll())
                 .oauth2Login(oauth2 ->
                         oauth2.loginPage("/login").successHandler(loginSocialSucessHandler)
@@ -42,15 +45,19 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder () {
-        return new BCryptPasswordEncoder();
-    }
-
-    public UserDetailsService userDetailsService (UserService userService) {
-     return new CustomUserDetailService(userService);
-    }
-    @Bean
     public GrantedAuthorityDefaults grantedAuthorityDefaults() {
         return  new GrantedAuthorityDefaults(" ");
+    }
+
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter () {
+        var authoritesConverter  = new JwtGrantedAuthoritiesConverter();
+        authoritesConverter.setAuthorityPrefix( " ");
+
+        var converter = new JwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(authoritesConverter);
+
+        return converter;
+
     }
 }
