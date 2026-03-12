@@ -1,5 +1,6 @@
 package com.thai.tec.librayapi.security;
 
+import com.thai.tec.librayapi.domain.dtos.userDTO.RequestUserDTO;
 import com.thai.tec.librayapi.domain.entities.User;
 import com.thai.tec.librayapi.service.UserService;
 import jakarta.servlet.ServletException;
@@ -14,6 +15,7 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -29,6 +31,13 @@ public class LoginSocialSucessHandler extends SavedRequestAwareAuthenticationSuc
         OAuth2User oAuth2User = oAuth2AuthenticationToken.getPrincipal();
         String email = oAuth2User.getAttribute("email");
         User user  = userService.getByEmail(email);
+
+        if(user == null) {
+            RequestUserDTO userCreated =  new RequestUserDTO(oAuth2User.getName().toString(),"1234", email,List.of("OPERADOR") );
+
+            userService.save(userCreated);
+        }
+
         CustomAuthentication customAuthentication = new CustomAuthentication(user);
         SecurityContextHolder.getContext().setAuthentication(customAuthentication);
         super.onAuthenticationSuccess(request,response,customAuthentication);

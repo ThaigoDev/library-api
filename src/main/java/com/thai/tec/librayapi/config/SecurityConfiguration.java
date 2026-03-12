@@ -23,14 +23,17 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+
 public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity, LoginSocialSucessHandler loginSocialSucessHandler)  throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults())
-                .oauth2Login(oauth2 -> oauth2.successHandler(loginSocialSucessHandler))
+                .formLogin(config -> config.loginPage("/login").permitAll())
+                .oauth2Login(oauth2 ->
+                        oauth2.loginPage("/login").successHandler(loginSocialSucessHandler)
+                )
                 .authorizeHttpRequests( authorize -> {
                     authorize.requestMatchers("/users/**").permitAll();
                     authorize.anyRequest().authenticated();
