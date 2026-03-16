@@ -39,7 +39,7 @@ public class SecurityConfiguration {
                 )
                 .authorizeHttpRequests( authorize -> {
                     authorize.requestMatchers("/users/**").permitAll();
-                    authorize.anyRequest().authenticated();
+                    authorize.anyRequest().permitAll();
                 })
                 .build();
     }

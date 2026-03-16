@@ -1,5 +1,6 @@
 package com.thai.tec.librayapi.controller;
 
+import com.thai.tec.librayapi.domain.dtos.ClientCredentialsDTO.ClientCredentialsRequestDTO;
 import com.thai.tec.librayapi.domain.entities.Client;
 import com.thai.tec.librayapi.service.ClientService;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,7 @@ public class ClientController {
     private final ClientService clientService;
 
     @PostMapping
-    @PreAuthorize("hasRole('GERENTE')")
-    public ResponseEntity<Void> save(@RequestBody Client client) {
+    public ResponseEntity<Void> save(@RequestBody ClientCredentialsRequestDTO client) {
         clientService.save(client);
         return ResponseEntity.ok().build();
     }

@@ -1,5 +1,6 @@
 package com.thai.tec.librayapi.security;
 
+import com.thai.tec.librayapi.repositories.ClientRepository;
 import com.thai.tec.librayapi.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,9 +23,9 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class CustomRegisteredClientRepository  implements RegisteredClientRepository {
-    private ClientService clientService;
-    private TokenSettings tokenSettings;
-    private ClientSettings clientSettings;
+    private final ClientRepository repository;
+    private final TokenSettings tokenSettings;
+    private final ClientSettings clientSettings;
 
     @Bean
     @Order(1)
@@ -36,7 +37,7 @@ public class CustomRegisteredClientRepository  implements RegisteredClientReposi
                         server.oidc(Customizer.withDefaults())
         );
         http.oauth2ResourceServer(oauthRS -> oauthRS.jwt(Customizer.withDefaults()));
-
+        http.securityMatcher(oAuth2AuthorizationServerConfigurer.getEndpointsMatcher());
         http.formLogin(config -> config.loginPage("/login"));
 
         return http.build();
@@ -59,7 +60,7 @@ public class CustomRegisteredClientRepository  implements RegisteredClientReposi
 
     @Override
     public RegisteredClient findByClientId(String clientId) {
-        var client = clientService.obterPorClientId(clientId);
+        var client = repository.findByClientId(clientId);
         if(client==null) {
             return null;
         }
