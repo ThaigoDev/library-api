@@ -65,12 +65,13 @@ public class CustomRegisteredClientRepository  implements RegisteredClientReposi
             return null;
         }
         return RegisteredClient.withId(
-                client.getClientId().toString())
+                client.getId().toString())
                 .clientId(client.getClientId())
                 .clientSecret(client.getClientSecret())
                 .redirectUri(client.getRedirectURI())
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .tokenSettings(tokenSettings)
                 .clientSettings(clientSettings)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
