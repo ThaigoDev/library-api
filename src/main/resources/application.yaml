@@ -1,6 +1,9 @@
 spring:
   application:
     name: librayapi
+  output:
+    ansi:
+      enabled: ALWAYS
   datasource:
     url: jdbc:postgresql://localhost:5432/library
     username: postgres
@@ -19,3 +22,25 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
+logging:
+  pattern:
+    console:''
+  file:
+    name: app.log
+  level:
+    root: warn
+    com:
+      thai:
+        tec:
+          libraryapi: trace
+    org:
+      springframework:
+        web: debug
+
+management:
+  server:
+    port: 9090
+  endpoints:
+    web:
+      exposure:
+        include: '*'

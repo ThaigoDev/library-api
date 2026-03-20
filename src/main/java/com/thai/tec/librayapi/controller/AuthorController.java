@@ -9,6 +9,7 @@ import com.thai.tec.librayapi.service.AuthorService;
 import com.thai.tec.librayapi.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,11 +22,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/authors")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthorController implements LocationURIGenerator {
     private final AuthorService authorService;
     @PostMapping
     public ResponseEntity<ResponseAuthorDTO> save(@RequestBody @Valid RequestAuthorDTO requestAuthorDTO) {
-
+        log.info("Cadastrando novo autor: {}", requestAuthorDTO.nameAuthor());
             var author = authorService.saveAuthor(requestAuthorDTO);
             URI location = generateHeaderLoation(author.id());
 
@@ -51,6 +53,7 @@ public class AuthorController implements LocationURIGenerator {
     public ResponseEntity<List<ResponseAuthorDTO>> search(
             @RequestParam(value = "nameAuthor", required = false) String nameAuthor,
             @RequestParam(value = "nacionality", required = false) String nacionality) {
+        log.info("Pesquisa autores");
 
         List<ResponseAuthorDTO> authors =  authorService.searchByExample(nameAuthor,nacionality);
         return  ResponseEntity.ok().body(authors);
